@@ -2,6 +2,7 @@ import discord
 from discord.ext import commands
 import requests
 import io
+import datetime
 
 intents = discord.Intents.default()
 intents.message_content = True
@@ -29,10 +30,18 @@ async def make_api_call(query, channel):
 @bot.event
 async def on_ready():
     print(f'Logged in as {bot.user.name}')
+    bot.start_time = datetime.datetime.now()
 
 @bot.command()
 async def scan(ctx, *, query):
     await make_api_call(query, ctx.channel)
+
+
+@bot.command()
+async def uptime(ctx):
+    current_time = datetime.datetime.now()
+    uptime = current_time - bot.start_time
+    await ctx.send(f"Uptime: {uptime}")
 
 @bot.event
 async def on_reaction_add(reaction, user):
